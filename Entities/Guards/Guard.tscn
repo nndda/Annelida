@@ -263,6 +263,11 @@ use_parent_material = true
 layout_mode = 2
 text = "Var: Val"
 
+[node name="IdleCheckTimer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 3.5
+one_shot = true
+
 [connection signal="triggered" from="." to="." method="_on_triggered" flags=6]
 [connection signal="body_entered" from="TriggerArea" to="." method="_on_trigger_body_entered"]
 [connection signal="area_entered" from="GeneralArea" to="." method="_on_general_area_entered"]
@@ -270,5 +275,6 @@ text = "Var: Val"
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_velocity_computed"]
 [connection signal="timeout" from="NavigationAgent2D/UpdatePlayerPos" to="." method="_on_update_player_pos_timeout"]
 [connection signal="pressed" from="EntityDebugInfo/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Button" to="EntityDebugInfo" method="toggle_visibility"]
+[connection signal="timeout" from="IdleCheckTimer" to="." method="_on_idle_check_timer_timeout"]
 
 [editable path="VisibilityHandler"]

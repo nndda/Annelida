@@ -236,7 +236,6 @@ func _on_triggered() -> void:
 
         if has_node(^"TriggerArea"):
             $TriggerArea.queue_free()
-        $GeneralArea.queue_free()
 
         if path != null:
             path.queue_free()
@@ -246,9 +245,13 @@ func _on_triggered() -> void:
 func _on_general_area_entered(area : Area2D) -> void:
     if area.name == &"PlayerGeneralArea":
         player_near = true
+        idle_check_timer.stop()
 func _on_general_area_exited(area  : Area2D) -> void:
     if area.name == &"PlayerGeneralArea":
         player_near = false
+        if is_triggered:
+            if !is_killed:
+                idle_check_timer.start(3.5)
 
 var shielded := false
 
@@ -279,3 +282,9 @@ func effect_knockback(power : float):
 #var lobst_coll := false
 #var on_line := false
 #var has_obstacle := false
+
+@onready var idle_check_timer : Timer = $IdleCheckTimer
+
+func _on_idle_check_timer_timeout() -> void:
+    if !player_near:
+        process_mode = Node.PROCESS_MODE_DISABLED
