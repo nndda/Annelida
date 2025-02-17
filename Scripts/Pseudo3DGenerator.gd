@@ -55,7 +55,7 @@ func generate_layers() -> void:
 
     top_layer_2.follow_viewport_scale = max_scale + 0.15
 
-    for d : Node in wall.get_children() as Array[Node]:
+    for d in wall.get_children():
         if d is TileMapLayer:
             d.add_to_group(d.name)
 
@@ -64,7 +64,7 @@ func generate_layers() -> void:
         var wall_layer : TileMapLayer = wall.duplicate()
         var wall_tile_set : TileSet = Global.tile_maps[user_tile_res(n, 1)]
 
-        layer.name = "%d" % n
+        layer.name = str(n)
         layer.layer = 0
         layer.follow_viewport_enabled = true
         layer.follow_viewport_scale = remap(n, 0, depth - 1, 1.0, max_scale)
@@ -106,12 +106,15 @@ func generate_layers() -> void:
 
         call_deferred(&"add_child", layer)
 
-    top_layer.get_node(^"Tiles").modulate = Color.WHITE
-    top_layer_2.get_node(^"Tiles").modulate = Color.WHITE
+    var top_layer_tiles : Node2D = top_layer.get_node(^"Tiles")
+    var top_layer_2_tiles : Node2D = top_layer_2.get_node(^"Tiles")
 
-    for tilemap : TileMapLayer in (
-        top_layer.get_node(^"Tiles").get_children(true) +
-        top_layer_2.get_node(^"Tiles").get_children(true)
+    top_layer_tiles.modulate = Color.WHITE
+    top_layer_2_tiles.modulate = Color.WHITE
+
+    for tilemap : Node in (
+        top_layer_tiles.get_children(true) +
+        top_layer_2_tiles.get_children(true)
        ):
         if tilemap is TileMapLayer:
             tilemap.tile_set = tilemap.tile_set.duplicate()
@@ -125,8 +128,7 @@ func generate_layers() -> void:
         wall,
         decor,
         decor_light,
-        ]:
-        f.queue_free()
+    ]: f.queue_free()
 
     patch_decor()
     layers_generated.emit()
@@ -135,16 +137,17 @@ func generate_layers() -> void:
 @export var collision_patch : TileMapLayer
 
 func patch_decor() -> void:
+    const vector2i_2_0 := Vector2i(2, 0)
     # 64^2
-    for _64 in [
-        Vector2i(1, 5),
-        Vector2i(3, 5),
-        Vector2i(5, 5),
-        Vector2i(7, 5),
-    ]:
+    for _64 : Vector2i in [
+            Vector2i(1, 5),
+            Vector2i(3, 5),
+            Vector2i(5, 5),
+            Vector2i(7, 5),
+        ]:
         for pos in decor_generated.get_used_cells_by_id(2, _64):
             for n in 4:
                 collision_patch.set_cell(
                     pos + Vector2i(n % 2, floori(n * .5)),
-                    1, Vector2i(2, 0)
+                    1, vector2i_2_0
                 )
