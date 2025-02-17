@@ -100,7 +100,7 @@ script = ExtResource("1_1ad8k")
 texture = ExtResource("2_dr7i5")
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
-color = Color(1, 0.921569, 0.870588, 1)
+color = Color(1, 0.874, 0.79, 1)
 range_z_min = -16
 range_z_max = 16
 range_layer_min = -1
